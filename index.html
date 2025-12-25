@@ -4,23 +4,52 @@
     <meta charset="UTF-8">
     <title>我的韓劇研究室</title>
     <style>
-        /* 這裡就是寫 CSS 的地方 */
         body {
-            background-color: #a7c1d7; /* 改背景顏色 */
-            color: #000000;/*">這是綠色的文字 (使用 Hex 代碼)*/
-            font-family: "Microsoft JhengHei", sans-serif; /* 改字體 */
-            text-align: center; /* 讓所有東西置中 */
+            background-color: #a7c1d7;
+            color: #000000;
+            font-family: "Microsoft JhengHei", sans-serif;
+            text-align: center;
+        }
+        img {
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        input, button {
+            padding: 8px;
+            margin: 10px;
         }
     </style>
 </head>
-    <body>   
+<body>   
     <h1>歡迎來到我的韓劇推薦站</h1>
+    
     <img src="https://hips.hearstapps.com/hmg-prod/images/431387676-996376841858785-8727663622603321243-n-65f83d916f443.jpg?crop=0.944867358708189xw:1xh;center,top" width="400" alt="劇組照"> 
-    <p>大家好，我是林語蕎 我最近剛開始學習網頁設計！</p>
+    
+    <p>大家好，我是林語蕎。我最近剛開始學習網頁設計！</p>
     <p>我最喜歡的一部劇是：<strong>《淚之女王》</strong></p>
 
     <a href="http://bit.ly/3MWr844">點我了解更多</a>
     <br>
-    <button onclick="alert('謝謝你點擊我！')">點我打招呼</button> 
-    </body>
+    
+    <h2 id="dramaDisplay">妳推薦的劇會顯示在這裡</h2>
+    <input type="text" id="dramaInput" placeholder="輸入推薦的韓劇名稱">
+    <button id="addBtn">立即推薦</button>
+
+    <script>
+        const addBtn = document.getElementById('addBtn');
+        const dramaInput = document.getElementById('dramaInput');
+        const dramaDisplay = document.getElementById('dramaDisplay');
+
+        addBtn.addEventListener('click', function() {
+            const dramaName = dramaInput.value;
+            if (dramaName !== "") {
+                dramaDisplay.innerText = "站長推薦了：《" + dramaName + "》";
+                dramaDisplay.style.color = "#d9534f";
+                dramaInput.value = ""; 
+            } else {
+                alert("語蕎，記得先輸入劇名喔！");
+            }
+        });
+    </script>
+</body>
 </html>
