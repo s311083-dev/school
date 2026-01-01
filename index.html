@@ -37,6 +37,13 @@
 <p id="searchResult">等待搜尋中...</p>
     <input type="text" id="dramaInput" placeholder="輸入推薦的韓劇名稱">
     <button id="addBtn">立即推薦</button>
+    <hr>
+<h3>依類型篩選</h3>
+<button class="category-btn" onclick="filterType('浪漫')">浪漫</button>
+<button class="category-btn" onclick="filterType('懸疑')">懸疑</button>
+<button class="category-btn" onclick="filterType('全部')">顯示全部</button>
+
+<p id="categoryResult">請選擇類型</p>
 
     <script>
         const addBtn = document.getElementById('addBtn');
@@ -74,6 +81,24 @@ searchInput.addEventListener('input', function() {
         }
     }
 });
+function filterType(type) {
+    const resultDisplay = document.getElementById('categoryResult');
+    
+    // 這裡我們模擬資料庫：淚之女王是「浪漫」類
+    const myDramaName = "淚之女王";
+    const myDramaType = "浪漫";
+
+    if (type === "全部") {
+        resultDisplay.innerText = "目前所有推薦： " + myDramaName;
+    } else if (type === myDramaType) {
+        resultDisplay.innerText = "找到囉！" + type + "類型的劇有：" + myDramaName;
+        resultDisplay.style.color = "pink"; // 浪漫用粉紅色
+    } else {
+        resultDisplay.innerText = "目前還沒有 " + type + " 類型的推薦喔！";
+        resultDisplay.style.color = "gray";
+    }
+}
+
     </script>
 </body>
 </html>
