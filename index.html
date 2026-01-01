@@ -32,6 +32,9 @@
     <br>
     
     <h2 id="dramaDisplay">妳推薦的劇會顯示在這裡</h2>
+    <hr> <h3>搜尋我的推薦清單</h3>
+<input type="text" id="searchInput" placeholder="輸入關鍵字搜尋...">
+<p id="searchResult">等待搜尋中...</p>
     <input type="text" id="dramaInput" placeholder="輸入推薦的韓劇名稱">
     <button id="addBtn">立即推薦</button>
 
@@ -50,6 +53,27 @@
                 alert("語蕎，記得先輸入劇名喔！");
             }
         });
+        const searchInput = document.getElementById('searchInput');
+const searchResult = document.getElementById('searchResult');
+
+// 監聽搜尋框的輸入動作
+searchInput.addEventListener('input', function() {
+    const keyword = searchInput.value; // 抓到妳現在打的字
+    
+    if (keyword === "") {
+        searchResult.innerText = "等待搜尋中...";
+        searchResult.style.color = "black";
+    } else {
+        // 這裡模擬搜尋邏輯：假設我們目前只有「淚之女王」
+        if ("淚之女王".includes(keyword)) {
+            searchResult.innerText = "找到了！符合關鍵字：「" + keyword + "」的有：淚之女王";
+            searchResult.style.color = "green";
+        } else {
+            searchResult.innerText = "抱歉，找不到包含「" + keyword + "」的劇。";
+            searchResult.style.color = "gray";
+        }
+    }
+});
     </script>
 </body>
 </html>
