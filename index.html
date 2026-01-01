@@ -30,71 +30,67 @@
 
     <a href="http://bit.ly/3MWr844">點我了解更多</a>
     <br>
-    
-    <h2 id="dramaDisplay">妳推薦的劇會顯示在這裡</h2>
-    <hr> <h3>搜尋我的推薦清單</h3>
-<input type="text" id="searchInput" placeholder="輸入關鍵字搜尋...">
-<p id="searchResult">等待搜尋中...</p>
-    <input type="text" id="dramaInput" placeholder="輸入推薦的韓劇名稱">
-    <button id="addBtn">立即推薦</button>
     <hr>
 <h3>依類型篩選</h3>
-<button class="category-btn" onclick="filterType('浪漫')">浪漫</button>
-<button class="category-btn" onclick="filterType('懸疑')">懸疑</button>
-<button class="category-btn" onclick="filterType('全部')">顯示全部</button>
+<button class="category-btn" onclick="filterType('浪漫愛情')">浪漫愛情</button>
+<button class="category-btn" onclick="filterType('醫院生活')">醫院生活</button>
+<button class="category-btn" onclick="filterType('校園')">校園</button>
+<button class="category-btn" onclick="filterType('穿越時空')">穿越時空</button>
+<button class="category-btn" onclick="filterType('犯罪偵查')">犯罪偵查</button>
+<button class="category-btn" onclick="filterType('復仇')">復仇</button>
+<button class="category-btn" onclick="filterType('懸疑驚悚')">懸疑驚悚</button>
+<button class="category-btn" onclick="filterType('溫馨家庭')">溫馨家庭</button>
+<button class="category-btn" onclick="filterType('法律')">法律</button>
+
+
 
 <p id="categoryResult">請選擇類型</p>
 
     <script>
-        const addBtn = document.getElementById('addBtn');
-        const dramaInput = document.getElementById('dramaInput');
-        const dramaDisplay = document.getElementById('dramaDisplay');
-
-        addBtn.addEventListener('click', function() {
-            const dramaName = dramaInput.value;
-            if (dramaName !== "") {
-                dramaDisplay.innerText = "站長推薦了：《" + dramaName + "》";
-                dramaDisplay.style.color = "#d9534f";
-                dramaInput.value = ""; 
-            } else {
-                alert("語蕎，記得先輸入劇名喔！");
-            }
-        });
-        const searchInput = document.getElementById('searchInput');
-const searchResult = document.getElementById('searchResult');
-
-// 監聽搜尋框的輸入動作
-searchInput.addEventListener('input', function() {
-    const keyword = searchInput.value; // 抓到妳現在打的字
-    
-    if (keyword === "") {
-        searchResult.innerText = "等待搜尋中...";
-        searchResult.style.color = "black";
-    } else {
-        // 這裡模擬搜尋邏輯：假設我們目前只有「淚之女王」
-        if ("淚之女王".includes(keyword)) {
-            searchResult.innerText = "找到了！符合關鍵字：「" + keyword + "」的有：淚之女王";
-            searchResult.style.color = "green";
-        } else {
-            searchResult.innerText = "抱歉，找不到包含「" + keyword + "」的劇。";
-            searchResult.style.color = "gray";
-        }
-    }
-});
+        
 function filterType(type) {
     const resultDisplay = document.getElementById('categoryResult');
     
-    // 這裡我們模擬資料庫：淚之女王是「浪漫」類
-    const myDramaName = "淚之女王";
-    const myDramaType = "浪漫";
-
-    if (type === "全部") {
-        resultDisplay.innerText = "目前所有推薦： " + myDramaName;
-    } else if (type === myDramaType) {
-        resultDisplay.innerText = "找到囉！" + type + "類型的劇有：" + myDramaName;
-        resultDisplay.style.color = "pink"; // 浪漫用粉紅色
-    } else {
-        resultDisplay.innerText = "目前還沒有 " + type + " 類型的推薦喔！";
+    // 這裡就是妳的手動對照表
+    if (type === "浪漫愛情") {
+        resultDisplay.innerText = "找到囉！浪漫愛情類的劇有：背著善宰跑、淚之女王、歡迎來到王之國";
+        resultDisplay.style.color = "pink";
+    } 
+    else if (type === "醫院生活") {
+        resultDisplay.innerText = "找到囉！醫院生活類的劇有：低谷醫生、浪漫醫生金師傅、重症外傷中心";
+        resultDisplay.style.color = "#008b8b"; // 深青色，很有醫院的感覺
+    } 
+    else if (type === "校園") {
+        resultDisplay.innerText = "找到囉！校園類的劇有：名校的階梯、清潭國際高等學校、那年我們的夏天";
+        resultDisplay.style.color = "darkblue";
+    } 
+    else if (type === "穿越時空") {
+        resultDisplay.innerText = "找到囉！穿越時空類的劇有：背著善宰跑、閃亮的西瓜、暴君的廚師";
+        resultDisplay.style.color = "purple";
+    }
+    else if (type === "犯罪偵查") {
+        resultDisplay.innerText = "找到囉！犯罪偵查類的劇有：白雪公主必須死、模範計程車、家母螳螂";
+        resultDisplay.style.color = "darkblue";
+    }
+    else if (type === "復仇") {
+        resultDisplay.innerText = "找到囉！復仇類的劇有：黑暗榮耀、模範計程車、親愛的X、再一次我的人生";
+        resultDisplay.style.color = "darkblue";
+    } 
+    else if (type === "懸疑驚悚") {
+        resultDisplay.innerText = "找到囉！懸疑驚悚類的劇有：智異山、惡之花、絕世網紅、血謎拼圖";
+        resultDisplay.style.color = "darkblue";
+    } 
+    else if (type === "溫馨家庭") {
+        resultDisplay.innerText = "找到囉！溫馨家庭類的劇有：媽媽朋友的兒子、壞媽媽、偶然成為一家人、苦盡柑來遇見你、颱風商社";
+        resultDisplay.style.color = "darkblue";
+    } 
+    else if (type === "法律") {
+        resultDisplay.innerText = "找到囉！法律類的劇有：為何是吳秀才、黑道律師文森佐、瑞草洞";
+        resultDisplay.style.color = "darkblue";
+    } 
+    else {
+        // 如果妳點了按鈕但還沒寫這部分的程式碼
+        resultDisplay.innerText = "目前還沒有「" + type + "」類的推薦喔，敬請期待！";
         resultDisplay.style.color = "gray";
     }
 }
