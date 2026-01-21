@@ -102,23 +102,23 @@
         // 1. 資料庫：這裡儲存妳所有的推薦內容
         const dramaData = [
             { name: "背著善宰跑", type: "浪漫愛情", img: "https://upload.wikimedia.org/wikipedia/zh/f/f8/%EC%84%A0%EC%9E%AC_%EC%97%85%EA%B3%A0_%ED%8A%80%EC%96%B4.jpg" },
-            { name: "淚之女王", type: "浪漫愛情", img: "https://bit.ly/3MWr844" },
-            { name: "歡迎來到王之國", type: "浪漫愛情", img: "https://bit.ly/3Z8XvX9" },
-            { name: "媽媽朋友的兒子", type: "浪漫愛情", img: "https://bit.ly/3Z8XvX9" },
-            { name: "那年我們的夏天", type: "浪漫愛情", img: "https://bit.ly/3Z8XvX9" },
-            { name: "與惡魔有約", type: "浪漫愛情", img: "https://bit.ly/3Z8XvX9" },
-            { name: "酒醉羅曼史", type: "浪漫愛情", img: "https://bit.ly/3Z8XvX9" },
-            { name: "低谷醫生", type: "醫院生活", img: "https://bit.ly/406WqXm" },
-            { name: "浪漫醫生金師傅", type: "醫院生活", img: "https://bit.ly/406WqXm" },
-            { name: "重症外傷中心", type: "醫院生活", img: "https://bit.ly/406WqXm" },
-            { name: "名校的階梯", type: "校園", img: "https://bit.ly/3YatJ9H" },
-            { name: "清潭國際高等學校", type: "校園", img: "https://bit.ly/3YatJ9H" },
-            { name: "背著善宰跑", type: "穿越時空", img: "https://bit.ly/3YatJ9H" },
-            { name: "閃亮的西瓜", type: "穿越時空", img: "https://bit.ly/3YatJ9H" },
-            { name: "黑暗榮耀", type: "復仇", img: "https://bit.ly/3YatJ9H" },
-            { name: "惡之花", type: "懸疑驚悚", img: "https://bit.ly/3YatJ9H" },
-            { name: "媽媽朋友的兒子", type: "溫馨家庭", img: "https://bit.ly/3YatJ9H" },
-            { name: "黑道律師文森佐", type: "法律", img: "https://bit.ly/3YatJ9H" }
+            { name: "淚之女王", type: "浪漫愛情", img: "https://image.presslogic.com/kdaily-image.presslogic.com/wp-content/uploads/2024/02/08b1452a.webp?auto=format&w=1053" },
+            { name: "歡迎來到王之國", type: "浪漫愛情", img: "https://a.ksd-i.com/a/2023-06-17/147987-976069.jpg" },
+            { name: "媽媽朋友的兒子", type: "浪漫愛情", img: "https://a.ksd-i.com/a/2024-07-24/154236-1009344.jpg" },
+            { name: "那年我們的夏天", type: "浪漫愛情", img: "https://i.namu.wiki/i/QTUDlNPfU6O84-Zfv4BXRCUdjHRn7sqGJGEbS5M2ncnZk3sVQcpGzBN35VRu0OtLE-8BBefBsZASDu0uucVtIA.webp" },
+            { name: "與惡魔有約", type: "浪漫愛情", img: "https://i.namu.wiki/i/2F-_Xoo367B8BPq7987I-LyRmFD8ZAW7yzigTNkf0yvOfp06ij_LUfiBS1axkXrDKgRALZDKIS5L3CWG3TUwGA.webp" },
+            { name: "酒醉羅曼史", type: "浪漫愛情", img: "https://i.namu.wiki/i/tcIJ2lZRS2fs5up7-UlBehhUA35i3d1SxsIwKD4SG5F9vLkBDuQkVTOQ-WGezsAjtgBKzXOT92ol0TbeXBNf9Q.webp" },
+            { name: "低谷醫生", type: "醫院生活", img: "https://i.namu.wiki/i/oCEXBK2KEQ5rziYIj2EaaEZdOOGBUYjihr-VSc0Qm8rEiUDEyJVksvmchpPlRr8A-ronndsjgbBsrORCYt1fsQ.webp" },
+            { name: "浪漫醫生金師傅", type: "醫院生活", img: "https://archivenew.vop.co.kr/images/9c419c2c579399e3db2fab3e8fdc473f/2023-06/1687404113_tV3Vf6eN_8443.jpeg" },
+            { name: "重症外傷中心", type: "醫院生活", img: "https://i.namu.wiki/i/JGwxSfEIpPumSJiQHFDgSEuJI-hUmC3eNe5biusPracT4TU9nuBm9PWulN75jwy0xEeT3bL1M9vbRgLQs_9eqw.webp" },
+            { name: "名校的階梯", type: "校園", img: "https://i.namu.wiki/i/UWFjkjZ0Lyub8sCFSbP2EwMbKYuXC9HRbtS74nXWTY8o0H9Q5APcj9KNZ64ZuihDbFNtUTqkgmD8ttxd8q5N-w.webp" },
+            { name: "清潭國際高等學校", type: "校園", img: "https://i.namu.wiki/i/2rQ581UPYgr0X3q6wP0xXs5NifwEyk0rceDnYwW6rdYqySd-K-akhhOT_4EkuGKfMUN1hPIvdAgVAxp1f6xEfA.webp" },
+            { name: "背著善宰跑", type: "穿越時空", img: "https://upload.wikimedia.org/wikipedia/zh/f/f8/%EC%84%A0%EC%9E%AC_%EC%97%85%EA%B3%A0_%ED%8A%80%EC%96%B4.jpg" },
+            { name: "閃亮的西瓜", type: "穿越時空", img: "https://i.namu.wiki/i/zEictFUQ9Zhoydt2PUnnjR9NYJj3hxPjeMAt_H3ighqkJORsPAotVYnDCDunW-bA-HTp1skXBsDQdBeW6woCCA.webp" },
+            { name: "黑暗榮耀", type: "復仇", img: "https://i.namu.wiki/i/8P5G3lXYNrd-Q739i23CwGtFgYfCW4hBtHB50dIM8q-4wpQi-D13ctWoXTUxA8ZcSGumUEt7RNpSdBSjDE7yZA.webp" },
+            { name: "惡之花", type: "懸疑驚悚", img: "https://i.namu.wiki/i/lfoHjjK3BdWYskkEANpNg-8t0mMhPYDiox7ixcE6mzN7m9GhOVw90Cdp3rSQabuQaroixZQlgzyweZTyR6pNTg.webp" },
+            { name: "媽媽朋友的兒子", type: "溫馨家庭", img: "https://i.namu.wiki/i/et0l8P9_og6N1iVbcdfyg-O6g6itErrSTdvPjkAozptQrXoH4U0aHb14I-mRJpAVof4htAIF4sF-re1UxZ2m0w.webp" },
+            { name: "黑道律師文森佐", type: "法律", img: "https://poc-cf-image.cjenm.com/resize/459/public/pcms/rep/B120200138/kr/B120200138_rep_1667888595801.jpg?v=1742978883" }
         ];
 
         // 2. 核心功能：過濾並顯示卡片
