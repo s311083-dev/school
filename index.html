@@ -10,91 +10,148 @@
             font-family: "Microsoft JhengHei", sans-serif;
             text-align: center;
         }
-        img {
+        /* 主視覺 banner */
+        .main-banner {
             border-radius: 15px;
             margin: 20px 0;
+            width: 400px;
         }
-        input, button {
-            padding: 8px;
+        /* 按鈕樣式 */
+        .category-btn {
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 20px;
+            border: 1px solid #fff;
+            background: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .category-btn:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+        }
+        
+        /* 卡片容器：Flexbox 排版 */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* 每一張卡片的樣式 */
+        .drama-card {
+            width: 200px;
+            background-color: rgb(248, 199, 199);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .drama-card:hover {
+            transform: scale(1.05);
+        }
+        .drama-card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+        }
+        .drama-card h4 {
             margin: 10px;
+            font-size: 18px;
+            color: #333;
+        }
+        .drama-card p {
+            color: #d9534f;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>   
     <h1>歡迎來到我的韓劇推薦站</h1>
     
-    <img src="https://hips.hearstapps.com/hmg-prod/images/431387676-996376841858785-8727663622603321243-n-65f83d916f443.jpg?crop=0.944867358708189xw:1xh;center,top" width="400" alt="劇組照"> 
+    <img src="https://hips.hearstapps.com/hmg-prod/images/431387676-996376841858785-8727663622603321243-n-65f83d916f443.jpg?crop=0.944867358708189xw:1xh;center,top" class="main-banner" alt="劇組照"> 
     
     <p>大家好，我是林語蕎。我最近剛開始學習網頁設計！</p>
     <p>我最喜歡的一部劇是：<strong>《淚之女王》</strong></p>
 
     <a href="http://bit.ly/3MWr844">點我了解更多</a>
     <br>
+    
     <hr>
-<h3>依類型篩選</h3>
-<button class="category-btn" onclick="filterType('浪漫愛情')">浪漫愛情</button>
-<button class="category-btn" onclick="filterType('醫院生活')">醫院生活</button>
-<button class="category-btn" onclick="filterType('校園')">校園</button>
-<button class="category-btn" onclick="filterType('穿越時空')">穿越時空</button>
-<button class="category-btn" onclick="filterType('犯罪偵查')">犯罪偵查</button>
-<button class="category-btn" onclick="filterType('復仇')">復仇</button>
-<button class="category-btn" onclick="filterType('懸疑驚悚')">懸疑驚悚</button>
-<button class="category-btn" onclick="filterType('溫馨家庭')">溫馨家庭</button>
-<button class="category-btn" onclick="filterType('法律')">法律</button>
+    <h3>依類型篩選</h3>
+    <button class="category-btn" onclick="filterType('全部')">顯示全部</button>
+    <button class="category-btn" onclick="filterType('浪漫愛情')">浪漫愛情</button>
+    <button class="category-btn" onclick="filterType('醫院生活')">醫院生活</button>
+    <button class="category-btn" onclick="filterType('校園')">校園</button>
+    <button class="category-btn" onclick="filterType('穿越時空')">穿越時空</button>
+    <button class="category-btn" onclick="filterType('犯罪偵查')">犯罪偵查</button>
+    <button class="category-btn" onclick="filterType('復仇')">復仇</button>
+    <button class="category-btn" onclick="filterType('懸疑驚悚')">懸疑驚悚</button>
+    <button class="category-btn" onclick="filterType('溫馨家庭')">溫馨家庭</button>
+    <button class="category-btn" onclick="filterType('法律')">法律</button>
 
-
-
-<p id="categoryResult">請選擇類型</p>
+    <hr>
+    <h3 id="categoryTitle">推薦清單</h3>
+    <div id="dramaContainer" class="card-container"></div>
 
     <script>
-        
-function filterType(type) {
-    const resultDisplay = document.getElementById('categoryResult');
-    
-    // 這裡就是妳的手動對照表
-    if (type === "浪漫愛情") {
-        resultDisplay.innerText = "找到囉！浪漫愛情類的劇有：背著善宰跑、淚之女王、歡迎來到王之國";
-        resultDisplay.style.color = "pink";
-    } 
-    else if (type === "醫院生活") {
-        resultDisplay.innerText = "找到囉！醫院生活類的劇有：低谷醫生、浪漫醫生金師傅、重症外傷中心";
-        resultDisplay.style.color = "#008b8b"; // 深青色，很有醫院的感覺
-    } 
-    else if (type === "校園") {
-        resultDisplay.innerText = "找到囉！校園類的劇有：名校的階梯、清潭國際高等學校、那年我們的夏天";
-        resultDisplay.style.color = "darkblue";
-    } 
-    else if (type === "穿越時空") {
-        resultDisplay.innerText = "找到囉！穿越時空類的劇有：背著善宰跑、閃亮的西瓜、暴君的廚師";
-        resultDisplay.style.color = "purple";
-    }
-    else if (type === "犯罪偵查") {
-        resultDisplay.innerText = "找到囉！犯罪偵查類的劇有：白雪公主必須死、模範計程車、家母螳螂";
-        resultDisplay.style.color = "darkblue";
-    }
-    else if (type === "復仇") {
-        resultDisplay.innerText = "找到囉！復仇類的劇有：黑暗榮耀、模範計程車、親愛的X、再一次我的人生";
-        resultDisplay.style.color = "darkblue";
-    } 
-    else if (type === "懸疑驚悚") {
-        resultDisplay.innerText = "找到囉！懸疑驚悚類的劇有：智異山、惡之花、絕世網紅、血謎拼圖";
-        resultDisplay.style.color = "darkblue";
-    } 
-    else if (type === "溫馨家庭") {
-        resultDisplay.innerText = "找到囉！溫馨家庭類的劇有：媽媽朋友的兒子、壞媽媽、偶然成為一家人、苦盡柑來遇見你、颱風商社";
-        resultDisplay.style.color = "darkblue";
-    } 
-    else if (type === "法律") {
-        resultDisplay.innerText = "找到囉！法律類的劇有：為何是吳秀才、黑道律師文森佐、瑞草洞";
-        resultDisplay.style.color = "darkblue";
-    } 
-    else {
-        // 如果妳點了按鈕但還沒寫這部分的程式碼
-        resultDisplay.innerText = "目前還沒有「" + type + "」類的推薦喔，敬請期待！";
-        resultDisplay.style.color = "gray";
-    }
-}
+        // 1. 資料庫：這裡儲存妳所有的推薦內容
+        const dramaData = [
+            { name: "背著善宰跑", type: "浪漫愛情", img: "https://upload.wikimedia.org/wikipedia/zh/f/f8/%EC%84%A0%EC%9E%AC_%EC%97%85%EA%B3%A0_%ED%8A%80%EC%96%B4.jpg" },
+            { name: "淚之女王", type: "浪漫愛情", img: "https://bit.ly/3MWr844" },
+            { name: "歡迎來到王之國", type: "浪漫愛情", img: "https://bit.ly/3Z8XvX9" },
+            { name: "媽媽朋友的兒子", type: "浪漫愛情", img: "https://bit.ly/3Z8XvX9" },
+            { name: "那年我們的夏天", type: "浪漫愛情", img: "https://bit.ly/3Z8XvX9" },
+            { name: "與惡魔有約", type: "浪漫愛情", img: "https://bit.ly/3Z8XvX9" },
+            { name: "酒醉羅曼史", type: "浪漫愛情", img: "https://bit.ly/3Z8XvX9" },
+            { name: "低谷醫生", type: "醫院生活", img: "https://bit.ly/406WqXm" },
+            { name: "浪漫醫生金師傅", type: "醫院生活", img: "https://bit.ly/406WqXm" },
+            { name: "重症外傷中心", type: "醫院生活", img: "https://bit.ly/406WqXm" },
+            { name: "名校的階梯", type: "校園", img: "https://bit.ly/3YatJ9H" },
+            { name: "清潭國際高等學校", type: "校園", img: "https://bit.ly/3YatJ9H" },
+            { name: "背著善宰跑", type: "穿越時空", img: "https://bit.ly/3YatJ9H" },
+            { name: "閃亮的西瓜", type: "穿越時空", img: "https://bit.ly/3YatJ9H" },
+            { name: "黑暗榮耀", type: "復仇", img: "https://bit.ly/3YatJ9H" },
+            { name: "惡之花", type: "懸疑驚悚", img: "https://bit.ly/3YatJ9H" },
+            { name: "媽媽朋友的兒子", type: "溫馨家庭", img: "https://bit.ly/3YatJ9H" },
+            { name: "黑道律師文森佐", type: "法律", img: "https://bit.ly/3YatJ9H" }
+        ];
 
+        // 2. 核心功能：過濾並顯示卡片
+        function filterType(selectedType) {
+            const container = document.getElementById('dramaContainer');
+            const title = document.getElementById('categoryTitle');
+            
+            // 清空舊內容
+            container.innerHTML = ""; 
+            title.innerText = selectedType === "全部" ? "所有推薦清單" : "找到囉！" + selectedType + " 類的推薦";
+
+            // 過濾資料
+            const matches = dramaData.filter(d => selectedType === "全部" || d.type === selectedType);
+
+            if (matches.length > 0) {
+                // 產生卡片 HTML
+                matches.forEach(drama => {
+                    const card = document.createElement('div');
+                    card.className = 'drama-card';
+                    card.innerHTML = `
+                        <img src="${drama.img}" alt="${drama.name}">
+                        <h4>${drama.name}</h4>
+                        <p>${drama.type}</p>
+                    `;
+                    container.appendChild(card);
+                });
+            } else {
+                container.innerHTML = `<p style="color:gray;">目前此分類還沒有劇照資料喔！</p>`;
+            }
+        }
+
+        // 3. 初始畫面：預設顯示全部
+        filterType('全部');
     </script>
 </body>
 </html>
