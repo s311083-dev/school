@@ -2,36 +2,58 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>我的韓劇研究室</title>
+    <title>我的韓劇研究室 - 第 11 週</title>
     <style>
         body {
             background-color: #a7c1d7;
             color: #000000;
             font-family: "Microsoft JhengHei", sans-serif;
             text-align: center;
+            margin: 0;
+            padding-bottom: 50px;
         }
-        /* 主視覺 banner */
+
+        /* 導覽列 */
+        nav {
+            background-color: #c1a9ca;
+            padding: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 第 11 週：導覽按鈕高亮樣式 */
+        .nav-active {
+            background-color: #ffffff !important;
+            color: #d9534f !important;
+            border: 2px solid #d9534f !important;
+            font-weight: bold;
+            transform: scale(1.1);
+        }
+
         .main-banner {
             border-radius: 15px;
-            margin: 20px 0;
+            margin: 20px auto;
+            display: block;
             width: 400px;
         }
-        /* 按鈕樣式 */
+
         .category-btn {
             padding: 8px 15px;
             margin: 5px;
             border-radius: 20px;
-            border: 1px solid #fff;
+            border: 1px solid #d79c9c;
             background: white;
             cursor: pointer;
             transition: 0.3s;
         }
+
         .category-btn:hover {
             background-color: #f0f0f0;
             transform: translateY(-2px);
         }
-        
-        /* 卡片容器：Flexbox 排版 */
+
         .card-container {
             display: flex;
             flex-wrap: wrap;
@@ -40,67 +62,93 @@
             padding: 20px;
         }
 
-        /* 每一張卡片的樣式 */
         .drama-card {
             width: 200px;
-            background-color: rgb(248, 199, 199);
+            background-color: rgb(199, 207, 153);
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             transition: transform 0.3s;
+            position: relative; /* 為了讓愛心定位 */
         }
+
         .drama-card:hover {
             transform: scale(1.05);
         }
+
         .drama-card img {
             width: 100%;
             height: 280px;
             object-fit: cover;
         }
-        .drama-card h4 {
-            margin: 10px;
-            font-size: 18px;
-            color: #333;
+
+        /* 第 11 週：愛心按鈕樣式 */
+        .like-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .drama-card p {
-            color: #d9534f;
-            font-size: 14px;
-            margin-bottom: 10px;
-            font-weight: bold;
+        .like-btn:hover { transform: scale(1.2); }
+
+        /* 第 11 週：淡入動畫 */
+        .page {
+            display: none;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body>   
-    <h1>歡迎來到我的韓劇推薦站</h1>
-    
-    <img src="https://hips.hearstapps.com/hmg-prod/images/431387676-996376841858785-8727663622603321243-n-65f83d916f443.jpg?crop=0.944867358708189xw:1xh;center,top" class="main-banner" alt="劇組照"> 
-    
-    <p>大家好，我是林語蕎。我最近剛開始學習網頁設計！</p>
-    <p>我最喜歡的一部劇是：<strong>《淚之女王》</strong></p>
-    
+<body>
 
-    <a href="https://zh.wikipedia.org/zh-tw/%E6%B7%9A%E4%B9%8B%E5%A5%B3%E7%8E%8B">點我了解更多</a>
-    <br>
-    
-    <hr>
-    <h3>依類型篩選</h3>
-    <button class="category-btn" onclick="filterType('浪漫愛情')">浪漫愛情</button>
-    <button class="category-btn" onclick="filterType('醫院生活')">醫院生活</button>
-    <button class="category-btn" onclick="filterType('校園')">校園</button>
-    <button class="category-btn" onclick="filterType('穿越時空')">穿越時空</button>
-    <button class="category-btn" onclick="filterType('犯罪偵查')">犯罪偵查</button>
-    <button class="category-btn" onclick="filterType('復仇')">復仇</button>
-    <button class="category-btn" onclick="filterType('懸疑驚悚')">懸疑驚悚</button>
-    <button class="category-btn" onclick="filterType('溫馨家庭')">溫馨家庭</button>
-    <button class="category-btn" onclick="filterType('法律')">法律</button>
-    <button class="category-btn" onclick="filterType('全部')">顯示全部</button>
+    <nav>
+        <button id="nav-home" class="category-btn" onclick="showPage('home')" style="background: #d9534f; color: white;">🏠 首頁介紹</button>
+        <button id="nav-list" class="category-btn" onclick="showPage('list')" style="background: #d9534f; color: white;">🎬 韓劇清單</button>
+    </nav>
 
-    <hr>
-    <h3 id="categoryTitle">推薦清單</h3>
-    <div id="dramaContainer" class="card-container"></div>
+    <div id="homePage" class="page">
+        <h1>歡迎來到我的韓劇推薦站</h1>
+        <img src="https://hips.hearstapps.com/hmg-prod/images/431387676-996376841858785-8727663622603321243-n-65f83d916f443.jpg?crop=0.944867358708189xw:1xh;center,top" class="main-banner" alt="劇組照"> 
+        <p>大家好，我是林語蕎。我最近剛開始學習網頁設計！</p>
+        <p>我最喜歡的一部劇是：<strong>《淚之女王》</strong></p>
+        <a href="https://zh.wikipedia.org/zh-tw/%E6%B7%9A%E4%B9%8B%E5%A5%B3%E7%8E%8B" target="_blank">點我了解更多</a>
+    </div>
+
+    <div id="listPage" class="page">
+        <hr>
+        <h3>依類型篩選</h3>
+        <button class="category-btn" onclick="filterType('浪漫愛情')">浪漫愛情</button>
+        <button class="category-btn" onclick="filterType('醫院生活')">醫院生活</button>
+        <button class="category-btn" onclick="filterType('校園')">校園</button>
+        <button class="category-btn" onclick="filterType('穿越時空')">穿越時空</button>
+        <button class="category-btn" onclick="filterType('犯罪偵查')">犯罪偵查</button>
+        <button class="category-btn" onclick="filterType('復仇')">復仇</button>
+        <button class="category-btn" onclick="filterType('懸疑驚悚')">懸疑驚悚</button>
+        <button class="category-btn" onclick="filterType('溫馨家庭')">溫馨家庭</button>
+        <button class="category-btn" onclick="filterType('法律')">法律</button>
+        <button class="category-btn" onclick="filterType('全部')" style="font-weight: bold; border-color: #d9534f;">顯示全部</button>
+
+        <hr>
+        <h3 id="categoryTitle">推薦清單</h3>
+        <div id="dramaContainer" class="card-container"></div>
+    </div>
 
     <script>
-        // 1. 資料庫：這裡儲存妳所有的推薦內容
         const dramaData = [
             { name: "背著善宰跑", type: "浪漫愛情", img: "https://upload.wikimedia.org/wikipedia/zh/f/f8/%EC%84%A0%EC%9E%AC_%EC%97%85%EA%B3%A0_%ED%8A%80%EC%96%B4.jpg" },
             { name: "淚之女王", type: "浪漫愛情", img: "https://image.presslogic.com/kdaily-image.presslogic.com/wp-content/uploads/2024/02/08b1452a.webp?auto=format&w=1053" },
@@ -135,41 +183,65 @@
             { name: "颱風商社", type: "溫馨家庭", img: "https://i.namu.wiki/i/uMGq0tz9fQc32t5wd3UFFoVUqdXgNtFnNVB-dIQ3FYbU_dMe1Hq7kis69NtcC6t_qefuYU_xBtHV7StUIX-GmA.webp" },
             { name: "為何是吳秀才", type: "法律", img: "https://i.namu.wiki/i/fe5iV1OmUyO4iC4td01zTfBXLoMP_8Vpxmap99caG_IcBfnaMdlUQvUXLkmY3_kSZztlJPBVTBWQlwCJiaKE8A.webp" },
             { name: "黑道律師文森佐", type: "法律", img: "https://poc-cf-image.cjenm.com/resize/459/public/pcms/rep/B120200138/kr/B120200138_rep_1667888595801.jpg?v=1742978883" },
-            { name: "瑞草洞", type: "法律", img: "https://i.namu.wiki/i/TJUf5wJ2MEi2EeU5Uun-W_awBWaCjrfGwGUrYyyij8b8UAHlsg2JAp2MS80F-ofPAo87orpbzOHJ2ZSXyJCcyw.webp" },
+            { name: "瑞草洞", type: "法律", img: "https://i.namu.wiki/i/TJUf5wJ2MEi2EeU5Uun-W_awBWaCjrfGwGUrYyyij8b8UAHlsg2JAp2MS80F-ofPAo87orpbzOHJ2ZSXyJCcyw.webp" }
+        ];
+
+        // 頁面切換 + 導覽高亮
+        function showPage(pageId) {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('listPage').style.display = 'none';
+            document.getElementById('nav-home').classList.remove('nav-active');
+            document.getElementById('nav-list').classList.remove('nav-active');
             
-    ];
-
-        // 2. 核心功能：過濾並顯示卡片
-        function filterType(selectedType) {
-            const container = document.getElementById('dramaContainer');
-            const title = document.getElementById('categoryTitle');
-            
-            // 清空舊內容
-            container.innerHTML = ""; 
-            title.innerText = selectedType === "全部" ? "所有推薦清單" : "找到囉！" + selectedType + " 類的推薦";
-
-            // 過濾資料
-            const matches = dramaData.filter(d => selectedType === "全部" || d.type === selectedType);
-
-            if (matches.length > 0) {
-                // 產生卡片 HTML
-                matches.forEach(drama => {
-                    const card = document.createElement('div');
-                    card.className = 'drama-card';
-                    card.innerHTML = `
-                        <img src="${drama.img}" alt="${drama.name}">
-                        <h4>${drama.name}</h4>
-                        <p>${drama.type}</p>
-                    `;
-                    container.appendChild(card);
-                });
+            if (pageId === 'home') {
+                document.getElementById('homePage').style.display = 'block';
+                document.getElementById('nav-home').classList.add('nav-active');
             } else {
-                container.innerHTML = `<p style="color:gray;">目前此分類還沒有劇照資料喔！</p>`;
+                document.getElementById('listPage').style.display = 'block';
+                document.getElementById('nav-list').classList.add('nav-active');
+                filterType('全部');
             }
         }
 
-        // 3. 初始畫面：預設顯示全部
-        filterType('全部');
+        // 愛心切換功能
+        function toggleLike(btn, name) {
+            if (btn.innerText === "🤍") {
+                btn.innerText = "❤️";
+            } else {
+                btn.innerText = "🤍";
+            }
+        }
+
+        function filterType(selectedType) {
+            const container = document.getElementById('dramaContainer');
+            const title = document.getElementById('categoryTitle');
+            container.innerHTML = ""; 
+            title.innerText = selectedType === "全部" ? "所有推薦清單" : "找到囉！" + selectedType + " 類的推薦";
+
+            let matches;
+            if (selectedType === "全部") {
+                matches = dramaData.filter((item, index, self) =>
+                    index === self.findIndex((t) => t.name === item.name)
+                );
+            } else {
+                matches = dramaData.filter(d => d.type === selectedType);
+            }
+
+            matches.forEach(drama => {
+                const card = document.createElement('div');
+                card.className = 'drama-card';
+                card.innerHTML = `
+                    <button class="like-btn" onclick="toggleLike(this, '${drama.name}')">🤍</button>
+                    <img src="${drama.img}" alt="${drama.name}" onerror="this.src='https://via.placeholder.com/200x280?text=圖片載入中'">
+                    <h4>${drama.name}</h4>
+                    <p>${drama.type}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // 初始載入顯示首頁
+        showPage('home');
     </script>
 </body>
 </html>
