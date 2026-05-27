@@ -2,43 +2,24 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>我的韓劇研究室 - 第 11 週</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的韓劇研究室</title>
     <style>
         body {
             background-color: #a7c1d7;
-            color: #000000;
+            color: #333;
             font-family: "Microsoft JhengHei", sans-serif;
             text-align: center;
             margin: 0;
             padding-bottom: 50px;
         }
-
-        /* 導覽列 */
         nav {
             background-color: #c1a9ca;
             padding: 15px;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-
-        /* 第 11 週：導覽按鈕高亮樣式 */
-        .nav-active {
-            background-color: #ffffff !important;
-            color: #d9534f !important;
-            border: 2px solid #d9534f !important;
-            font-weight: bold;
-            transform: scale(1.1);
-        }
-
-        .main-banner {
-            border-radius: 15px;
-            margin: 20px auto;
-            display: block;
-            width: 400px;
-        }
-
         .category-btn {
             padding: 8px 15px;
             margin: 5px;
@@ -48,12 +29,9 @@
             cursor: pointer;
             transition: 0.3s;
         }
-
         .category-btn:hover {
-            background-color: #f0f0f0;
-            transform: translateY(-2px);
+            background-color: #fce4ec;
         }
-
         .card-container {
             display: flex;
             flex-wrap: wrap;
@@ -61,221 +39,257 @@
             gap: 20px;
             padding: 20px;
         }
-
         .drama-card {
             width: 200px;
-            background-color: rgb(199, 207, 153);
+            background-color: #fffde7;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-            position: relative; /* 為了讓愛心定位 */
+            cursor: pointer;
         }
-
-        .drama-card:hover {
-            transform: scale(1.05);
-        }
-
         .drama-card img {
             width: 100%;
             height: 280px;
             object-fit: cover;
         }
-
-        /* 第 11 週：愛心按鈕樣式 */
-        .like-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.8);
-            border: none;
-            border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            cursor: pointer;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        .like-btn:hover { transform: scale(1.2); }
-
-        /* 第 11 週：淡入動畫 */
-        .page {
+        
+        /* 彈跳視窗 */
+        .modal {
             display: none;
-            animation: fadeIn 0.6s ease-out;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 450px;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
+        #modalImg { width: 100%; height: 300px; object-fit: cover; }
+        .modal-info { padding: 20px; }
+        .close-btn { position: absolute; right: 15px; top: 10px; font-size: 30px; color: white; cursor: pointer; z-index: 10; text-shadow: 0 0 5px rgba(0,0,0,0.8); }
+        
+        /* 星星評分 */
+        .star-rating {
+            font-size: 30px;
+            color: #ccc;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+        .star-rating .active {
+            color: #ffcc00;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+        .hashtag {
+            display: inline-block;
+            padding: 5px 12px;
+            margin: 3px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .page { display: none; }
+
+        .filter-container {
+            margin: 10px 0;
+            display: none; 
         }
     </style>
 </head>
 <body>
 
     <nav>
-        <button id="nav-home" class="category-btn" onclick="showPage('home')" style="background: #d9534f; color: white;">🏠 首頁介紹</button>
-        <button id="nav-list" class="category-btn" onclick="showPage('list')" style="background: #d9534f; color: white;">🎬 韓劇清單</button>
+        <button class="category-btn" onclick="showPage('home')">🏠 首頁介紹</button>
+        <button class="category-btn" onclick="showPage('list')">🎬 全部清單</button>
+        
+        <div id="filterSection" class="filter-container">
+            <button class="category-btn" onclick="filterDramas('全部')">全部</button>
+            <button class="category-btn" onclick="filterDramas('浪漫愛情')">🩷 浪漫愛情</button>
+            <button class="category-btn" onclick="filterDramas('醫院生活')">🏥 醫院生活</button>
+            <button class="category-btn" onclick="filterDramas('校園')">🏫 校園</button>
+            <button class="category-btn" onclick="filterDramas('穿越時空')">⏳ 穿越時空</button>
+            <button class="category-btn" onclick="filterDramas('犯罪偵查')">🚨 犯罪偵查</button>
+            <button class="category-btn" onclick="filterDramas('復仇')">🔥 復仇</button>
+            <button class="category-btn" onclick="filterDramas('懸疑驚悚')">🔍 懸疑驚悚</button>
+            <button class="category-btn" onclick="filterDramas('溫馨家庭')">🏠 溫馨家庭</button>
+            <button class="category-btn" onclick="filterDramas('法律')">⚖️ 法律</button>
+        </div>
     </nav>
 
     <div id="homePage" class="page">
-    <h1 style="color: #4a4a4a;">⭐ 我的韓劇研究室 ⭐</h1>
-    
-    <div style="display: inline-block;">
-        <img src="https://hips.hearstapps.com/hmg-prod/images/431387676-996376841858785-8727663622603321243-n-65f83d916f443.jpg?crop=0.944867358708189xw:1xh;center,top" 
-             class="main-banner" alt="淚之女王">
-    </div>
-
-    <div style="background: white; max-width: 500px; margin: 20px auto; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-        
-        
-        <p>我最喜歡的韓劇是：<strong>《淚之女王》</strong></p>
-        
-        <p>
-            <a href="https://zh.wikipedia.org/zh-tw/%E6%B7%9A%E4%B9%8B%E5%A5%B3%E7%8E%8B" 
-               target="_blank" 
-               style="color: #d9534f; text-decoration: none; font-weight: bold;">
-               🔗 點我了解更多《淚之女王》
-            </a>
-        </p>
-    </div>
-
-    <div style="background: white; max-width: 500px; margin: 20px auto; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-        <h3>大家好我是林語蕎</h3>
-        <p>歡迎來到我的韓劇推薦室！我非常喜歡看韓劇，目前正在挑戰網頁設計。</p>
-        
-        <div style="margin: 15px 0;">
-            <span style="background: #a7c1d7; padding: 5px 10px; border-radius: 15px; font-size: 12px; margin: 2px; display: inline-block;">網頁設計新手</span>
-            <span style="background: #c1a9ca; padding: 5px 10px; border-radius: 15px; font-size: 12px; margin: 2px; display: inline-block;">韓劇狂熱粉</span>
-            <span style="background: #d79c9c; padding: 5px 10px; border-radius: 15px; font-size: 12px; margin: 2px; display: inline-block;">浪漫喜劇控</span>
+        <h1 style="margin-top: 30px;">⭐ 我的韓劇研究室 ⭐</h1>
+        <img src="https://hips.hearstapps.com/hmg-prod/images/431387676-996376841858785-8727663622603321243-n-65f83d916f443.jpg" style="width: 300px; border-radius: 20px;">
+        <div style="background: white; max-width: 500px; margin: 20px auto; padding: 20px; border-radius: 15px;">
+            <p>我最喜歡的韓劇是：<strong>《淚之女王》</strong></p>
+            <p><a href="https://zh.wikipedia.org/zh-tw/%E6%B7%9A%E4%B9%8B%E5%A5%B3%E7%8E%8B" target="_blank" style="color: #d9534f; text-decoration: none; font-weight: bold;">🔗 點我了解更多《淚之女王》</a></p>
+            
+            <div style="margin: 15px 0;">
+                <span class="hashtag" style="background: #a7c1d7;"># 網頁設計新手</span>
+                <span class="hashtag" style="background: #c1a9ca;"># 韓劇狂熱粉</span>
+                <span class="hashtag" style="background: #d79c9c;"># 浪漫喜劇控</span>
+            </div>
+            <button class="category-btn" style="background: #d9534f; color: white; width: 100%;" onclick="showPage('list')">進入韓劇清單 ➔</button>
         </div>
-
-        <p style="font-size: 14px; color: #666; line-height: 1.6;">
-            我整理了一些我推薦的韓劇 快點下面的按鈕進去看吧!
-        </p>
-
-        <button class="category-btn" onclick="showPage('list')" 
-                style="background: #d9534f; color: white; width: 100%; margin-top: 10px; font-weight: bold;">
-            點我進入韓劇清單 ➔
-        </button>
     </div>
-</div>
 
     <div id="listPage" class="page">
-        <hr>
-        <h3>依類型篩選</h3>
-        <button class="category-btn" onclick="filterType('浪漫愛情')">浪漫愛情</button>
-        <button class="category-btn" onclick="filterType('醫院生活')">醫院生活</button>
-        <button class="category-btn" onclick="filterType('校園')">校園</button>
-        <button class="category-btn" onclick="filterType('穿越時空')">穿越時空</button>
-        <button class="category-btn" onclick="filterType('犯罪偵查')">犯罪偵查</button>
-        <button class="category-btn" onclick="filterType('復仇')">復仇</button>
-        <button class="category-btn" onclick="filterType('懸疑驚悚')">懸疑驚悚</button>
-        <button class="category-btn" onclick="filterType('溫馨家庭')">溫馨家庭</button>
-        <button class="category-btn" onclick="filterType('法律')">法律</button>
-        <button class="category-btn" onclick="filterType('全部')" style="font-weight: bold; border-color: #d9534f;">顯示全部</button>
-
-        <hr>
-        <h3 id="categoryTitle">推薦清單</h3>
         <div id="dramaContainer" class="card-container"></div>
+    </div>
+
+    <div id="dramaModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <img id="modalImg" src="">
+            <div class="modal-info">
+                <h2 id="modalName" style="margin: 0; color: #d9534f;">劇名</h2>
+                <div class="star-rating" id="starContainer">
+                    <span onclick="setRating(1)">☆</span><span onclick="setRating(2)">☆</span><span onclick="setRating(3)">☆</span><span onclick="setRating(4)">☆</span><span onclick="setRating(5)">☆</span>
+                </div>
+                <p id="modalType" style="color: #888; font-weight: bold; margin: 5px 0;"></p>
+                <hr>
+                <p id="modalDesc" style="line-height: 1.6; font-size: 15px; color: #444;"></p>
+            </div>
+        </div>
     </div>
 
     <script>
         const dramaData = [
-            { name: "背著善宰跑", type: "浪漫愛情", img: "https://upload.wikimedia.org/wikipedia/zh/f/f8/%EC%84%A0%EC%9E%AC_%EC%97%85%EA%B3%A0_%ED%8A%80%EC%96%B4.jpg" },
-            { name: "淚之女王", type: "浪漫愛情", img: "https://image.presslogic.com/kdaily-image.presslogic.com/wp-content/uploads/2024/02/08b1452a.webp?auto=format&w=1053" },
-            { name: "歡迎來到王之國", type: "浪漫愛情", img: "https://a.ksd-i.com/a/2023-06-17/147987-976069.jpg" },
-            { name: "媽媽朋友的兒子", type: "浪漫愛情", img: "https://a.ksd-i.com/a/2024-07-24/154236-1009344.jpg" },
-            { name: "那年我們的夏天", type: "浪漫愛情", img: "https://i.namu.wiki/i/QTUDlNPfU6O84-Zfv4BXRCUdjHRn7sqGJGEbS5M2ncnZk3sVQcpGzBN35VRu0OtLE-8BBefBsZASDu0uucVtIA.webp" },
-            { name: "與惡魔有約", type: "浪漫愛情", img: "https://i.namu.wiki/i/2F-_Xoo367B8BPq7987I-LyRmFD8ZAW7yzigTNkf0yvOfp06ij_LUfiBS1axkXrDKgRALZDKIS5L3CWG3TUwGA.webp" },
-            { name: "酒醉羅曼史", type: "浪漫愛情", img: "https://i.namu.wiki/i/tcIJ2lZRS2fs5up7-UlBehhUA35i3d1SxsIwKD4SG5F9vLkBDuQkVTOQ-WGezsAjtgBKzXOT92ol0TbeXBNf9Q.webp" },
-            { name: "低谷醫生", type: "醫院生活", img: "https://i.namu.wiki/i/oCEXBK2KEQ5rziYIj2EaaEZdOOGBUYjihr-VSc0Qm8rEiUDEyJVksvmchpPlRr8A-ronndsjgbBsrORCYt1fsQ.webp" },
-            { name: "浪漫醫生金師傅", type: "醫院生活", img: "https://archivenew.vop.co.kr/images/9c419c2c579399e3db2fab3e8fdc473f/2023-06/1687404113_tV3Vf6eN_8443.jpeg" },
-            { name: "重症外傷中心", type: "醫院生活", img: "https://i.namu.wiki/i/JGwxSfEIpPumSJiQHFDgSEuJI-hUmC3eNe5biusPracT4TU9nuBm9PWulN75jwy0xEeT3bL1M9vbRgLQs_9eqw.webp" },
-            { name: "名校的階梯", type: "校園", img: "https://i.namu.wiki/i/UWFjkjZ0Lyub8sCFSbP2EwMbKYuXC9HRbtS74nXWTY8o0H9Q5APcj9KNZ64ZuihDbFNtUTqkgmD8ttxd8q5N-w.webp" },
-            { name: "清潭國際高等學校", type: "校園", img: "https://i.namu.wiki/i/2rQ581UPYgr0X3q6wP0xXs5NifwEyk0rceDnYwW6rdYqySd-K-akhhOT_4EkuGKfMUN1hPIvdAgVAxp1f6xEfA.webp" },
-            { name: "背著善宰跑", type: "穿越時空", img: "https://upload.wikimedia.org/wikipedia/zh/f/f8/%EC%84%A0%EC%9E%AC_%EC%97%85%EA%B3%A0_%ED%8A%80%EC%96%B4.jpg" },
-            { name: "閃亮的西瓜", type: "穿越時空", img: "https://i.namu.wiki/i/zEictFUQ9Zhoydt2PUnnjR9NYJj3hxPjeMAt_H3ighqkJORsPAotVYnDCDunW-bA-HTp1skXBsDQdBeW6woCCA.webp" },
-            { name: "暴君的廚師", type: "穿越時空", img: "https://i.namu.wiki/i/gCRYU1o5-y-Cl83JXt6vBU-oWbiR1gnjiuE-FuTMJEfHSfEkCDSCr-cnWfTLRCV8ENJmacJFY_QQW0PxWSLW5w.webp"},
-            { name: "白雪公主非死不可", type: "犯罪偵查", img: "https://i.namu.wiki/i/QRLt1uOQnPDKCq_pwsBTkeLjHGHB-RruL5Z4Nb5DfH7x13OVJ3y_YlI-IQdHJQ5HfVGAl-RkcVYjSfDssr7Xjg.webp"},
-            { name: "模範計程車", type: "犯罪偵查", img: "https://i.namu.wiki/i/QT6NJVSZEkFjHh09HFbPad4vpTOz5zZ9aX6tkUdL1Lvu75c9HdIqREO1nmPYCN0auRu8O29obYMoPwN67jCqhg.webp"},
-            { name: "家母螳螂", type: "犯罪偵查", img: "https://i.namu.wiki/i/xx-3OeXT_91VmIAS_KZecNCcM9Pg6svKt31K4mcxU0GYaUh5TdUo0cE7aXf5ogij5VkyRhLuvg7QS87_0h8cqA.webp"},
-            { name: "黑暗榮耀", type: "復仇", img: "https://i.namu.wiki/i/8P5G3lXYNrd-Q739i23CwGtFgYfCW4hBtHB50dIM8q-4wpQi-D13ctWoXTUxA8ZcSGumUEt7RNpSdBSjDE7yZA.webp" },
-            { name: "模範計程車", type: "復仇", img: "https://i.namu.wiki/i/QT6NJVSZEkFjHh09HFbPad4vpTOz5zZ9aX6tkUdL1Lvu75c9HdIqREO1nmPYCN0auRu8O29obYMoPwN67jCqhg.webp"},
-            { name: "再一次我的人生", type: "復仇", img: "https://cdn.mhns.co.kr/news/photo/202203/522964_633451_1457.jpg"},
-            { name: "親愛的X", type: "復仇", img: "https://i.namu.wiki/i/I71C27370QLbGRY30eM7XOmi58SicWJ5HEQFP2xjLr5eB0rd_SbdEMNcm2gCeBenbOiEl7lBgokp_HilEApG_A.webp"},
-            { name: "智異山", type: "懸疑驚悚", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi_MtfSs8rJm4NsXYyiNmqnHa1rWXTDBAuj8vu2d0Mq0Qdr9cjVrQx_nBqUFagAN4KT2T4fmc5OitakpoAQPjhISZGMr7uj4j0tRO_pwiGZTieGG1vqTdaEpnEZ6mZXWhktCX03/w454-h640/f637696477536640931.jpg" },
-            { name: "惡之花", type: "懸疑驚悚", img: "https://i.namu.wiki/i/lfoHjjK3BdWYskkEANpNg-8t0mMhPYDiox7ixcE6mzN7m9GhOVw90Cdp3rSQabuQaroixZQlgzyweZTyR6pNTg.webp" },
-            { name: "絕世網紅", type: "懸疑驚悚", img: "https://i.namu.wiki/i/wOD2GSUyfFcHaxqNr8Gq5HV9uwYxYDDEt6Sxwv8LPtW7ibIW0NN7yla0pBhioiRvcgGGySjlpsiKav_DTP8r6A.webp" },
-            { name: "血謎拼圖", type: "懸疑驚悚", img: "https://i.namu.wiki/i/X_pq8wmoVsZasa0Kk-IOP9pIOVQjaOcZOpW3Y4x29Oj1SNei9-PvHA4uC7O3Pt_9bmX41XCelJMowAzzq92Zng.webp" },
-            { name: "媽媽朋友的兒子", type: "溫馨家庭", img: "https://a.ksd-i.com/a/2024-07-24/154236-1009344.jpg" },
-            { name: "壞媽媽", type: "溫馨家庭", img: "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20230421/P001712373.jpg/dims/resize/480" },
-            { name: "偶然成為一家人", type: "溫馨家庭", img: "https://i.namu.wiki/i/9WQyCzKOL48VjVHf1IJfr2wUVCjYy3uJhmHi241OCJulBNouA898nbKY19E-6t4TkxrC0dObXotpmJjcJQPLBg.webp" },
-            { name: "苦盡柑來遇見你", type: "溫馨家庭", img: "https://cdn.iconsumer.or.kr/news/photo/202503/27600_36902_5449.jpeg" },
-            { name: "颱風商社", type: "溫馨家庭", img: "https://i.namu.wiki/i/uMGq0tz9fQc32t5wd3UFFoVUqdXgNtFnNVB-dIQ3FYbU_dMe1Hq7kis69NtcC6t_qefuYU_xBtHV7StUIX-GmA.webp" },
-            { name: "為何是吳秀才", type: "法律", img: "https://i.namu.wiki/i/fe5iV1OmUyO4iC4td01zTfBXLoMP_8Vpxmap99caG_IcBfnaMdlUQvUXLkmY3_kSZztlJPBVTBWQlwCJiaKE8A.webp" },
-            { name: "黑道律師文森佐", type: "法律", img: "https://poc-cf-image.cjenm.com/resize/459/public/pcms/rep/B120200138/kr/B120200138_rep_1667888595801.jpg?v=1742978883" },
-            { name: "瑞草洞", type: "法律", img: "https://i.namu.wiki/i/TJUf5wJ2MEi2EeU5Uun-W_awBWaCjrfGwGUrYyyij8b8UAHlsg2JAp2MS80F-ofPAo87orpbzOHJ2ZSXyJCcyw.webp" }
+            { name: "淚之女王", type: "浪漫愛情", img: "https://image.presslogic.com/kdaily-image.presslogic.com/wp-content/uploads/2024/02/08b1452a.webp?auto=format&w=1053", desc: "講述財閥千金與入贅女婿結婚三年，在婚姻危機中經歷波折，最終重燃愛火，共創奇蹟的浪漫故事。" },
+            { name: "金秘書為何那樣", type: "浪漫愛情", img: "https://a.ksd-i.com/a/2018-08-05/108101-641684.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "社內相親", type: "浪漫愛情", img: "https://upload.wikimedia.org/wikipedia/zh/1/19/A_Business_Proposal.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "愛情怎麼翻譯", type: "浪漫愛情", img: "https://upload.wikimedia.org/wikipedia/zh/6/64/%EC%9D%B4_%EC%82%AC%EB%9E%91_%ED%86%B5%EC%97%AD_%EB%90%98%EB%82%98%EC%9A%94_poster.png", desc: "請在這裡輸入劇情介紹..." },
+            { name: "偶像瘋子", type: "浪漫愛情", img: "https://upload.wikimedia.org/wikipedia/zh/c/c9/IDOL_I_2025_drama_poster.png", desc: "請在這裡輸入劇情介紹..." },
+            { name: "訂閱男友", type: "浪漫愛情", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ2NhmAoK1A-iCwPQLAVPLxkb2qKHUx8QiAg&s", desc: "請在這裡輸入劇情介紹..." },
+            { name: "21世紀大君夫人", type: "浪漫愛情", img: "https://upload.wikimedia.org/wikipedia/zh/a/a5/21%EC%84%B8%EA%B8%B0_%EB%8C%80%EA%B5%B0_%EB%B6%80%EC%9D%B8.png", desc: "請在這裡輸入劇情介紹..." },
+            { name: "秒殺愛情", type: "浪漫愛情", img: "https://cdn.bountyhunter.co/file/a5bd56a9-3e40-45a5-ba60-9a7b3773ef16.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "今天開始是人類", type: "浪漫愛情", img: "https://upload.wikimedia.org/wikipedia/zh/e/e6/%EC%98%A4%EB%8A%98%EB%B6%80%ED%84%B0_%EC%9D%B8%EA%B0%84%EC%9E%85%EB%8B%88%EB%8B%A4%EB%A7%8C_poster.png", desc: "請在這裡輸入劇情介紹..." },
+            { name: "背著善宰跑", type: "浪漫愛情", img: "https://upload.wikimedia.org/wikipedia/zh/f/f8/%EC%84%A0%EC%9E%AC_%EC%97%85%EA%B3%A0_%ED%8A%80%EC%96%B4.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "歡迎來到王之國", type: "浪漫愛情", img: "https://a.ksd-i.com/a/2023-06-17/147987-976069.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "媽媽朋友的兒子", type: "浪漫愛情", img: "https://a.ksd-i.com/a/2024-07-24/154236-1009344.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "那年我們的夏天", type: "浪漫愛情", img: "https://i.namu.wiki/i/QTUDlNPfU6O84-Zfv4BXRCUdjHRn7sqGJGEbS5M2ncnZk3sVQcpGzBN35VRu0OtLE-8BBefBsZASDu0uucVtIA.webp", desc: "請在這裡輸入劇情介紹..." },
+            { name: "與惡魔有約", type: "浪漫愛情", img: "https://i.namu.wiki/i/2F-_Xoo367B8BPq7987I-LyRmFD8ZAW7yzigTNkf0yvOfp06ij_LUfiBS1axkXrDKgRALZDKIS5L3CWG3TUwGA.webp", desc: "請在這裡輸入劇情介紹..." },
+            { name: "酒醉羅曼史", type: "浪漫愛情", img: "https://i.namu.wiki/i/tcIJ2lZRS2fs5up7-UlBehhUA35i3d1SxsIwKD4SG5F9vLkBDuQkVTOQ-WGezsAjtgBKzXOT92ol0TbeXBNf9Q.webp", desc: "請在這裡輸入劇情介紹..." },
+            { name: "低谷醫生", type: "醫院生活", img: "https://i.namu.wiki/i/oCEXBK2KEQ5rziYIj2EaaEZdOOGBUYjihr-VSc0Qm8rEiUDEyJVksvmchpPlRr8A-ronndsjgbBsrORCYt1fsQ.webp", desc: "請在這裡輸入劇情介紹..." },
+            { name: "doctors ", type: "醫院生活", img: "https://upload.wikimedia.org/wikipedia/zh/5/52/Doctors.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "太陽的後裔", type: "醫院生活", img: "https://upload.wikimedia.org/wikipedia/zh/b/ba/Descendent_of_the_Sun.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "浪漫醫生金師傅", type: "醫院生活", img: "https://archivenew.vop.co.kr/images/9c419c2c579399e3db2fab3e8fdc473f/2023-06/1687404113_tV3Vf6eN_8443.jpeg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "重症外傷中心", type: "醫院生活", img: "https://i.namu.wiki/i/JGwxSfEIpPumSJiQHFDgSEuJI-hUmC3eNe5biusPracT4TU9nuBm9PWulN75jwy0xEeT3bL1M9vbRgLQs_9eqw.webp", desc: "講述天才外科醫生白江赫，受命整頓資源匱乏的重症中心。他帶領團隊在生死邊緣拯救垂死病人，不惜對抗醫院權勢與體制，只為守護生命的第一線。" },
+            { name: "名校的階梯", type: "校園", img: "https://i.namu.wiki/i/UWFjkjZ0Lyub8sCFSbP2EwMbKYuXC9HRbtS74nXWTY8o0H9Q5APcj9KNZ64ZuihDbFNtUTqkgmD8ttxd8q5N-w.webp", desc: "請在這裡輸入劇情介紹..." },
+            { name: "二十五二十一", type: "校園", img: "https://media.vogue.com.tw/photos/620a3cb2a1d364fa7db83682/2:3/w_2560%2Cc_limit/f637798291391433538.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "女神降臨", type: "校園", img: "https://upload.wikimedia.org/wikipedia/zh/b/b0/True_Beauty_%28TV_series%29.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "弱美男英雄", type: "校園", img: "https://upload.wikimedia.org/wikipedia/zh/f/f5/%EC%95%BD%ED%95%9C%EC%98%81%EC%9B%85_Class_1_poster.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "繼承者們", type: "校園", img: "https://upload.wikimedia.org/wikipedia/zh/e/e2/%E6%AC%B2%E6%88%B4%E7%8E%8B%E5%86%A0%EF%BC%8C%E5%BF%85%E6%89%BF%E5%85%B6%E9%87%8D%EF%BC%8D%E7%B9%BC%E6%89%BF%E8%80%85%E5%80%91.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "舉重妖精金福珠", type: "校園", img: "https://i.kfs.io/playlist/global/49670219v1/cropresize/600x600.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "清潭國際高等學校", type: "校園", img: "https://i.namu.wiki/i/2rQ581UPYgr0X3q6wP0xXs5NifwEyk0rceDnYwW6rdYqySd-K-akhhOT_4EkuGKfMUN1hPIvdAgVAxp1f6xEfA.webp", desc: "請在這裡輸入劇情介紹..." },
+            { name: "閃亮的西瓜", type: "穿越時空", img: "https://i.namu.wiki/i/zEictFUQ9Zhoydt2PUnnjR9NYJj3hxPjeMAt_H3ighqkJORsPAotVYnDCDunW-bA-HTp1skXBsDQdBeW6woCCA.webp", desc: "請在這裡輸入劇情介紹..." },
+            { name: "隧道", type: "穿越時空", img: "https://upload.wikimedia.org/wikipedia/zh/thumb/4/40/Tunnel_OCN.jpg/250px-Tunnel_OCN.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "重返18歲", type: "穿越時空", img: "https://upload.wikimedia.org/wikipedia/zh/d/da/18_Again.png", desc: "請在這裡輸入劇情介紹..." },
+            { name: "背著善宰跑", type: "穿越時空", img: "https://upload.wikimedia.org/wikipedia/zh/f/f8/%EC%84%A0%EC%9E%AC_%EC%97%85%EA%B3%A0_%ED%8A%80%EC%96%B4.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "暴君的廚師", type: "穿越時空", img: "https://i.namu.wiki/i/gCRYU1o5-y-Cl83JXt6vBU-oWbiR1gnjiuE-FuTMJEfHSfEkCDSCr-cnWfTLRCV8ENJmacJFY_QQW0PxWSLW5w.webp", desc: "請在這裡輸入劇情介紹..." },
+            { name: "白雪公主非死不可", type: "犯罪偵查", img: "https://i.namu.wiki/i/QRLt1uOQnPDKCq_pwsBTkeLjHGHB-RruL5Z4Nb5DfH7x13OVJ3y_YlI-IQdHJQ5HfVGAl-RkcVYjSfDssr7Xjg.webp", desc: "請在這裡輸入劇情介紹..." },
+            { name: "模範計程車", type: "犯罪偵查", img: "https://www.dramaqueen.com.tw/images/video_poster/2021/20210330124555435596e640ee0abe0a080ac21bfab6c6aebd.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "家母螳螂", type: "犯罪偵查", img: "https://i.namu.wiki/i/xx-3OeXT_91VmIAS_KZecNCcM9Pg6svKt31K4mcxU0GYaUh5TdUo0cE7aXf5ogij5VkyRhLuvg7QS87_0h8cqA.webp", desc: "請在這裡輸入劇情介紹..." },
+            { name: "SIGNAL信號", type: "犯罪偵查", img: "https://upload.wikimedia.org/wikipedia/zh/2/24/Signal_TVN.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "搜查班長1958", type: "犯罪偵查", img: "https://cdn.tatlerasia.com/tatlerasia/i/2024/04/08160012-bbsimage-20240321091126-c8d900e3137941c18807dd3df0dacb41_cover_1000x1429.jpeg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "VOICE聲命線", type: "犯罪偵查", img: "https://pic.pimg.tw/hsun19940218/1486981254-3583385791_n.jpg?v=1486981259", desc: "請在這裡輸入劇情介紹..." },
+            { name: "黑暗榮耀", type: "復仇", img: "https://i.namu.wiki/i/8P5G3lXYNrd-Q739i23CwGtFgYfCW4hBtHB50dIM8q-4wpQi-D13ctWoXTUxA8ZcSGumUEt7RNpSdBSjDE7yZA.webp", desc: "請在這裡輸入劇情介紹..." },
+            { name: "模範計程車", type: "復仇", img: "https://www.dramaqueen.com.tw/images/video_poster/2021/20210330124555435596e640ee0abe0a080ac21bfab6c6aebd.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "財閥家的小兒子", type: "復仇", img: "https://hips.hearstapps.com/hmg-prod/images/fotojet-1-1667214888.jpg?crop=0.503xw:1.00xh;0,0&resize=640:*", desc: "請在這裡輸入劇情介紹..." },
+            { name: "黑話律師", type: "復仇", img: "https://upload.wikimedia.org/wikipedia/zh/c/c5/Big_Mouth_2022_main_poster.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "再一次我的人生", type: "復仇", img: "https://cdn.mhns.co.kr/news/photo/202203/522964_633451_1457.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "親愛的X", type: "復仇", img: "https://i.namu.wiki/i/I71C27370QLbGRY30eM7XOmi58SicWJ5HEQFP2xjLr5eB0rd_SbdEMNcm2gCeBenbOiEl7lBgokp_HilEApG_A.webp", desc: "請在這裡輸入劇情介紹..." },
+            { name: "智異山", type: "懸疑驚悚", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi_MtfSs8rJm4NsXYyiNmqnHa1rWXTDBAuj8vu2d0Mq0Qdr9cjVrQx_nBqUFagAN4KT2T4fmc5OitakpoAQPjhISZGMr7uj4j0tRO_pwiGZTieGG1vqTdaEpnEZ6mZXWhktCX03/w454-h640/f637696477536640931.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "惡之花", type: "懸疑驚悚", img: "https://i.namu.wiki/i/lfoHjjK3BdWYskkEANpNg-8t0mMhPYDiox7ixcE6mzN7m9GhOVw90Cdp3rSQabuQaroixZQlgzyweZTyR6pNTg.webp", desc: "請在這裡輸入劇情介紹..." },
+            { name: "照明商店", type: "懸疑驚悚", img: "https://upload.wikimedia.org/wikipedia/zh/f/f4/Light_Shop_2024_Disney_Plus_series_poster.jpeg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "絕世網紅", type: "懸疑驚悚", img: "https://i.namu.wiki/i/wOD2GSUyfFcHaxqNr8Gq5HV9uwYxYDDEt6Sxwv8LPtW7ibIW0NN7yla0pBhioiRvcgGGySjlpsiKav_DTP8r6A.webp", desc: "請在這裡輸入劇情介紹..." },
+             { name: "秘密森林", type: "懸疑驚悚", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkK3CIubR4XV2k2rABV9q9uIT4gGjgmzDb9w&s", desc: "請在這裡輸入劇情介紹..." },
+            { name: "血謎拼圖", type: "懸疑驚悚", img: "https://i.namu.wiki/i/X_pq8wmoVsZasa0Kk-IOP9pIOVQjaOcZOpW3Y4x29Oj1SNei9-PvHA4uC7O3Pt_9bmX41XCelJMowAzzq92Zng.webp", desc: "請在這裡輸入劇情介紹..." },
+            { name: "壞媽媽", type: "溫馨家庭", img: "https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20230421/P001712373.jpg/dims/resize/480", desc: "請在這裡輸入劇情介紹..." },
+            { name: "請回答1988", type: "溫馨家庭", img: "https://media.vogue.com.tw/photos/6940445bcb2219dd9034efe3/2:3/w_1600%2Cc_limit/SaveClip.App_587886013_18103808110657010_2868573589962882722_n.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "偶然成為一家人", type: "溫馨家庭", img: "https://i.namu.wiki/i/9WQyCzKOL48VjVHf1IJfr2wUVCjYy3uJhmHi241OCJulBNouA898nbKY19E-6t4TkxrC0dObXotpmJjcJQPLBg.webp", desc: "請在這裡輸入劇情介紹..." },
+            { name: "我們的藍調時光", type: "溫馨家庭", img: "https://media.vogue.com.tw/photos/624ef423fe23e128057ba550/2:3/w_2560%2Cc_limit/%25E6%2588%2591%25E5%2580%2591%25E7%259A%2584%25E8%2597%258D%25E8%25AA%25BF%25E6%2599%2582%25E5%2585%2589%25E4%25B8%25BB%25E6%25B5%25B7%25E5%25A0%25B1.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "苦盡柑來遇見你", type: "溫馨家庭", img: "https://cdn.iconsumer.or.kr/news/photo/202503/27600_36902_5449.jpeg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "颱風商社", type: "溫馨家庭", img: "https://i.namu.wiki/i/uMGq0tz9fQc32t5wd3UFFoVUqdXgNtFnNVB-dIQ3FYbU_dMe1Hq7kis69NtcC6t_qefuYU_xBtHV7StUIX-GmA.webp", desc: "請在這裡輸入劇情介紹..." },
+            { name: "為何是吳秀才", type: "法律", img: "https://i.namu.wiki/i/fe5iV1OmUyO4iC4td01zTfBXLoMP_8Vpxmap99caG_IcBfnaMdlUQvUXLkmY3_kSZztlJPBVTBWQlwCJiaKE8A.webp", desc: "請在這裡輸入劇情介紹..." },
+            { name: "黑道律師文森佐", type: "法律", img: "https://poc-cf-image.cjenm.com/resize/459/public/pcms/rep/B120200138/kr/B120200138_rep_1667888595801.jpg?v=1742978883", desc: "請在這裡輸入劇情介紹..." },
+            { name: "少年法庭", type: "法律", img: "https://media.vogue.com.tw/photos/620339819a43f9026459a54e/master/w_1600%2Cc_limit/S__32948501.jpg", desc: "請在這裡輸入劇情介紹..." },
+            { name: "瑞草洞", type: "法律", img: "https://i.namu.wiki/i/TJUf5wJ2MEi2EeU5Uun-W_awBWaCjrfGwGUrYyyij8b8UAHlsg2JAp2MS80F-ofPAo87orpbzOHJ2ZSXyJCcyw.webp", desc: "請在這裡輸入劇情介紹..." }
         ];
 
-        // 頁面切換 + 導覽高亮
         function showPage(pageId) {
-            document.getElementById('homePage').style.display = 'none';
-            document.getElementById('listPage').style.display = 'none';
-            document.getElementById('nav-home').classList.remove('nav-active');
-            document.getElementById('nav-list').classList.remove('nav-active');
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            document.getElementById(pageId + 'Page').style.display = 'block';
             
-            if (pageId === 'home') {
-                document.getElementById('homePage').style.display = 'block';
-                document.getElementById('nav-home').classList.add('nav-active');
+            const filterSec = document.getElementById('filterSection');
+            if(pageId === 'list') {
+                filterSec.style.display = 'block';
+                renderList(dramaData); 
             } else {
-                document.getElementById('listPage').style.display = 'block';
-                document.getElementById('nav-list').classList.add('nav-active');
-                filterType('全部');
+                filterSec.style.display = 'none';
             }
         }
 
-        // 愛心切換功能
-        function toggleLike(btn, name) {
-            if (btn.innerText === "🤍") {
-                btn.innerText = "❤️";
-            } else {
-                btn.innerText = "🤍";
-            }
-        }
-
-        function filterType(selectedType) {
+        function renderList(dataArray) {
             const container = document.getElementById('dramaContainer');
-            const title = document.getElementById('categoryTitle');
-            container.innerHTML = ""; 
-            title.innerText = selectedType === "全部" ? "所有推薦清單" : "找到囉！" + selectedType + " 類的推薦";
-
-            let matches;
-            if (selectedType === "全部") {
-                matches = dramaData.filter((item, index, self) =>
-                    index === self.findIndex((t) => t.name === item.name)
-                );
-            } else {
-                matches = dramaData.filter(d => d.type === selectedType);
-            }
-
-            matches.forEach(drama => {
+            container.innerHTML = "";
+            dataArray.forEach(d => {
                 const card = document.createElement('div');
                 card.className = 'drama-card';
-                card.innerHTML = `
-                    <button class="like-btn" onclick="toggleLike(this, '${drama.name}')">🤍</button>
-                    <img src="${drama.img}" alt="${drama.name}" onerror="this.src='https://via.placeholder.com/200x280?text=圖片載入中'">
-                    <h4>${drama.name}</h4>
-                    <p>${drama.type}</p>
-                `;
+                card.onclick = () => openModal(d.name, d.type, d.img, d.desc);
+                card.innerHTML = `<img src="${d.img}"><h4>${d.name}</h4>`;
                 container.appendChild(card);
             });
         }
 
-        // 初始載入顯示首頁
+        function filterDramas(type) {
+            if (type === '全部') {
+                renderList(dramaData);
+            } else {
+                const filtered = dramaData.filter(d => d.type === type);
+                renderList(filtered);
+            }
+        }
+
+        function openModal(name, type, img, desc) {
+            document.getElementById('modalName').innerText = name;
+            document.getElementById('modalType').innerText = "類型：" + type;
+            document.getElementById('modalImg').src = img;
+            document.getElementById('modalDesc').innerText = desc;
+            resetStars();
+            document.getElementById('dramaModal').style.display = "block";
+        }
+
+        function setRating(n) {
+            const stars = document.querySelectorAll('#starContainer span');
+            stars.forEach((star, index) => {
+                if (index < n) {
+                    star.innerText = '★';
+                    star.classList.add('active');
+                } else {
+                    star.innerText = '☆';
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        function resetStars() {
+            const stars = document.querySelectorAll('#starContainer span');
+            stars.forEach(star => {
+                star.innerText = '☆';
+                star.classList.remove('active');
+            });
+        }
+
+        function closeModal() { document.getElementById('dramaModal').style.display = "none"; }
+        window.onclick = (e) => { if (e.target.className === 'modal') closeModal(); };
+        
         showPage('home');
     </script>
 </body>
