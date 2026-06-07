@@ -54,6 +54,12 @@
             cursor: pointer;
             font-weight: bold;
             margin-left: 10px;
+            transition: 0.3s;
+        }
+        
+        .theme-toggle:hover {
+            filter: brightness(1.2);
+            transform: scale(1.05);
         }
 
         .card-container {
@@ -138,6 +144,7 @@
         
         /* 收藏清單為空時的樣式 */
         .empty-msg { padding: 50px; color: #666; font-style: italic; }
+        
     </style>
 </head>
 <body>
@@ -146,6 +153,7 @@
         <button class="category-btn" onclick="showPage('home')">🏠 首頁介紹</button>
         <button class="category-btn" onclick="showPage('list')">🎬 全部清單</button>
         <button class="category-btn" onclick="showPage('fav')" style="background-color: #ffebee;">❤ 收藏清單</button>
+        <button class="theme-toggle" id="randomBtn" onclick="randomDrama()">🎲 今天看什麼？</button>
         <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">🌙 深色模式</button>
         
         <div id="filterSection" class="filter-container">
@@ -210,7 +218,6 @@
     </div>
 
     <script>
-        // 在原始資料中加入 isFavorite 屬性
         const dramaList = [
             { name: "淚之女王", type: "浪漫愛情", img: "https://image.presslogic.com/kdaily-image.presslogic.com/wp-content/uploads/2024/02/08b1452a.webp?auto=format&w=1053", desc: "講述財閥千金與入贅女婿結婚三年，在婚姻危機中經歷波折，最終重燃愛火，共創奇蹟的浪漫故事。", trailer: "https://www.youtube.com/embed/oEzMOiEkU2A", isFavorite: false },
             { name: "金秘書為何那樣", type: "浪漫愛情", img: "https://a.ksd-i.com/a/2018-08-05/108101-641684.jpg", desc: "財閥副會長李英俊與完美秘書金美蘇，因金秘書突如其來的辭職計畫，展開一場傲嬌上司挽留下屬的浪漫辦公室戀情。", trailer: "https://www.youtube.com/embed/UVxkiQRNua4", isFavorite: false },
@@ -237,7 +244,7 @@
             { name: "女神降臨", type: "校園", img: "https://upload.wikimedia.org/wikipedia/zh/b/b0/True_Beauty_%28TV_series%29.jpg", desc: "外貌自卑少女透過化妝變身女神，與冷酷校草守護祕密的愛情故事。", trailer: "https://www.youtube.com/embed/yymfmEreWmU", isFavorite: false },
             { name: "弱美男英雄", type: "校園", img: "https://upload.wikimedia.org/wikipedia/zh/f/f5/%EC%95%BD%ED%95%9C%EC%98%81%EC%9B%85_Class_1_poster.jpg", desc: "模範生利用頭腦對抗校園暴力，展開以暴制暴的硬核校園成長故事。", trailer: "https://www.youtube.com/embed/Dk0rbB7_hRw", isFavorite: false },
             { name: "繼承者們", type: "校園", img: "https://upload.wikimedia.org/wikipedia/zh/e/e2/%E6%AC%B2%E6%88%B4%E7%8E%8B%E5%86%A0%EF%BC%8C%E5%BF%85%E6%89%BF%E5%85%B6%E9%87%8D%EF%BC%8D%E7%B9%BC%E6%89%BF%E8%80%85%E5%80%91.jpg", desc: "財閥繼承者們遇見平凡少女車恩尚，展開跨越階級的青春成長故事。", trailer: "https://www.youtube.com/embed/52Zt8K8K-rg", isFavorite: false },
-            { name: "舉重妖精金福珠", type: "校園", img: "https://i.kfs.io/playlist/global/49670219v1/cropresize/600x600.jpg", desc: "舉重選手與游泳天才，在體大校園追求夢想並展開的爆笑心動初戀。", trailer: "https://www.youtube.com/embed/WVYmEHkPqr4", isFavorite: false },
+            { name: "舉重妖精金福珠", type: "校園", img: "https://i.kfs.io/playlist/global/49670219v1/cropresize/600x600.jpg", desc: "舉重選手與游泳天才，在體大校園追求夢夢並展開的爆笑心動初戀。", trailer: "https://www.youtube.com/embed/WVYmEHkPqr4", isFavorite: false },
             { name: "清潭國際高等學校", type: "校園", img: "https://i.namu.wiki/i/2rQ581UPYgr0X3q6wP0xXs5NifwEyk0rceDnYwW6rdYqySd-K-akhhOT_4EkuGKfMUN1hPIvdAgVAxp1f6xEfA.webp", desc: "貧窮目擊者轉學到貴族學校，與財閥三世展開心理攻防的懸疑故事。", trailer: "https://www.youtube.com/embed/WgMLgqxSMb0", isFavorite: false },
             { name: "閃亮的西瓜", type: "穿越時空", img: "https://i.namu.wiki/i/zEictFUQ9Zhoydt2PUnnjR9NYJj3hxPjeMAt_H3ighqkJORsPAotVYnDCDunW-bA-HTp1skXBsDQdBeW6woCCA.webp", desc: "音樂天才少年穿越到1995年與父親組團，展開關於夢想與治癒的故事。", trailer: "https://www.youtube.com/embed/Mc8NLdoEMf4", isFavorite: false },
             { name: "隧道", type: "穿越時空", img: "https://upload.wikimedia.org/wikipedia/zh/thumb/4/40/Tunnel_OCN.jpg/250px-Tunnel_OCN.jpg", desc: "1986年刑警穿越到三十年後，與現代刑警聯手追捕連環殺人犯。", trailer: "https://www.youtube.com/embed/4_7GpSUA6V0", isFavorite: false },
@@ -251,8 +258,8 @@
             { name: "搜查班長1958", type: "犯罪偵查", img: "https://cdn.tatlerasia.com/tatlerasia/i/2024/04/08160012-bbsimage-20240321091126-c8d900e3137941c18807dd3df0dacb41_cover_1000x1429.jpeg", desc: "熱血刑警在黑暗時代打擊腐敗權力，寫下正義英雄傳奇的故事。", trailer: "https://www.youtube.com/embed/ZK4IvtTvfDk", isFavorite: false },
             { name: "VOICE聲命線", type: "犯罪偵查", img: "https://pic.pimg.tw/hsun19940218/1486981254-3583385791_n.jpg?v=1486981259", desc: "黃金時間隊隊員利用優於常人的聽力，在危急時刻追緝殘暴殺手。", trailer: "https://www.youtube.com/embed/RcL8kBkq0Vk", isFavorite: false },
             { name: "黑暗榮耀", type: "復仇", img: "https://i.namu.wiki/i/8P5G3lXYNrd-Q739i23CwGtFgYfCW4hBtHB50dIM8q-4wpQi-D13ctWoXTUxA8ZcSGumUEt7RNpSdBSjDE7yZA.webp", desc: "曾受校園暴力的女子策畫多年復仇，讓加害者墮入深淵的爽快故事。", trailer: "https://www.youtube.com/embed/FpLuKeKB4xU", isFavorite: false },
-            { name: "財閥家的小兒子", type: "復仇", img: "https://hips.hearstapps.com/hmg-prod/images/fotojet-1-1667214888.jpg?crop=0.503xw:1.00xh;0,0&resize=640:*", desc: "重生為財閥家小兒子的家臣，憑前世記憶進行商業併購並展開復仇。", trailer: "https://www.youtube.com/embed/N2kA2mR_IxQ", isFavorite: false },
             { name: "模範計程車", type: "復仇", img: "https://www.dramaqueen.com.tw/images/video_poster/2021/20210330124555435596e640ee0abe0a080ac21bfab6c6aebd.jpg", desc: "秘密計程車公司代受害者復仇，以惡制惡懲治法律無法制裁的罪犯。", trailer: "https://www.youtube.com/embed/FOAtNnvin7U", isFavorite: false },
+            { name: "財閥家的小兒子", type: "復仇", img: "https://hips.hearstapps.com/hmg-prod/images/fotojet-1-1667214888.jpg?crop=0.503xw:1.00xh;0,0&resize=640:*", desc: "重生為財閥家小兒子的家臣，憑前世記憶進行商業併購並展開復仇。", trailer: "https://www.youtube.com/embed/N2kA2mR_IxQ", isFavorite: false },
             { name: "黑話律師", type: "復仇", img: "https://upload.wikimedia.org/wikipedia/zh/c/c5/Big_Mouth_2022_main_poster.jpg", desc: "三流律師被誣陷後黑化，在獄中以惡制惡，揭開權貴陰謀的故事。", trailer: "https://www.youtube.com/embed/mbCKzgg5ytI", isFavorite: false },
             { name: "再一次我的人生", type: "復仇", img: "https://cdn.mhns.co.kr/news/photo/202203/522964_633451_1457.jpg", desc: "正義檢察官重生回到高中，憑前世記憶剷除邪惡權臣的熱血故事。", trailer: "https://www.youtube.com/embed/gj0lXLq2c0M", isFavorite: false },
             { name: "親愛的X", type: "復仇", img: "https://i.namu.wiki/i/I71C27370QLbGRY30eM7XOmi58SicWJ5HEQFP2xjLr5eB0rd_SbdEMNcm2gCeBenbOiEl7lBgokp_HilEApG_A.webp", desc: "反社會人格女星與守護她的男人間，一場毀滅與愛恨的懸疑羅曼史。", trailer: "https://www.youtube.com/embed/jQJp8P9uXwU", isFavorite: false },
@@ -275,7 +282,17 @@
         ];
 
         let currentTrailerUrl = "";
-        let activeDramaName = ""; // 用來追蹤目前彈窗顯示的是哪一部
+        let activeDramaName = ""; 
+
+        // --- 新增：隨機推薦功能 ---
+        function randomDrama() {
+            if (dramaList.length === 0) return;
+            // 隨機選取索引
+            const randomIndex = Math.floor(Math.random() * dramaList.length);
+            const luckyDrama = dramaList[randomIndex];
+            // 直接呼叫 openModal 開啟該劇彈窗
+            openModal(luckyDrama.name);
+        }
 
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
@@ -288,13 +305,12 @@
                 renderList(dramaList, 'dramaContainer');
             } else if (pageId === 'fav') {
                 filterSec.style.display = 'none';
-                renderFavoriteList(); // 渲染收藏頁面
+                renderFavoriteList(); 
             } else {
                 filterSec.style.display = 'none';
             }
         }
 
-        // 修改 renderList 使其能渲染到不同的 Container
         function renderList(dataArray, containerId) {
             const container = document.getElementById(containerId);
             container.innerHTML = "";
@@ -307,13 +323,12 @@
             dataArray.forEach(d => {
                 const card = document.createElement('div');
                 card.className = 'drama-card';
-                card.onclick = () => openModal(d.name); // 改用名稱開彈窗
+                card.onclick = () => openModal(d.name); 
                 card.innerHTML = `<img src="${d.img}"><h4>${d.name}</h4>`;
                 container.appendChild(card);
             });
         }
 
-        // 專屬渲染收藏清單的函式
         function renderFavoriteList() {
             const favs = dramaList.filter(d => d.isFavorite);
             renderList(favs, 'favContainer');
@@ -328,12 +343,11 @@
             }
         }
 
-        // 修改 openModal，從陣列找資料，確保狀態一致
         function openModal(name) {
             const d = dramaList.find(item => item.name === name);
             if(!d) return;
 
-            activeDramaName = name; // 存入全域變數
+            activeDramaName = name; 
             document.getElementById('modalName').innerText = d.name;
             document.getElementById('modalType').innerText = "類型：" + d.type;
             document.getElementById('modalDesc').innerText = d.desc;
@@ -350,7 +364,6 @@
 
             playBtn.style.display = (d.trailer && d.trailer !== "") ? "block" : "none";
             
-            // 愛心狀態：根據資料顯示紅或灰
             const favBtn = document.getElementById('favBtn');
             if(d.isFavorite) {
                 favBtn.classList.add('active');
@@ -362,13 +375,11 @@
             document.getElementById('dramaModal').style.display = "block";
         }
 
-        // 新增：處理收藏按鈕點擊
         function handleFavoriteClick() {
             const drama = dramaList.find(d => d.name === activeDramaName);
             if(drama) {
-                drama.isFavorite = !drama.isFavorite; // 反轉狀態
+                drama.isFavorite = !drama.isFavorite; 
                 
-                // 更新 UI 愛心顏色
                 const btn = document.getElementById('favBtn');
                 if(drama.isFavorite) {
                     btn.classList.add('active');
@@ -376,7 +387,6 @@
                     btn.classList.remove('active');
                 }
                 
-                // 如果人在收藏清單頁面，即時更新列表
                 if(document.getElementById('favPage').style.display === 'block') {
                     renderFavoriteList();
                 }
